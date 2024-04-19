@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents CORS settings
 /// </summary>
-public record CoreSettings
+public sealed record CorsSettings
 {
     /// <summary>
     /// Gets collection of allowed origins

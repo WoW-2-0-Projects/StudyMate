@@ -8,8 +8,8 @@ public static partial class HostConfiguration
     private static WebApplicationBuilder AddCors(this WebApplicationBuilder builder)
     {
         // Register settings
-        builder.Services.Configure<CoreSettings>(builder.Configuration.GetSection(nameof(CoreSettings)));
-        var corsSettings = builder.Configuration.GetSection(nameof(CoreSettings)).Get<CoreSettings>()
+        builder.Services.Configure<CorsSettings>(builder.Configuration.GetSection(nameof(CorsSettings)));
+        var corsSettings = builder.Configuration.GetSection(nameof(CorsSettings)).Get<CorsSettings>()
                            ?? throw new HostAbortedException("Cors settings are not configured");
 
         // Register development CORS policy
