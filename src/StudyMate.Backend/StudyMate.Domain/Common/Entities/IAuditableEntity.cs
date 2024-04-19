@@ -1,8 +1,7 @@
 ﻿namespace StudyMate.Domain.Common.Entities;
 
 /// <summary>
-/// Interface that marks an entity as being auditable for creation, modification, and deletion tracking.
-/// Inherits from the `ISoftDeletedEntity` interface, which likely provides additional properties for soft deletion tracking.
+/// Defines an entity that created and modified time can be tracked.
 /// </summary>
 public interface IAuditableEntity : ISoftDeletedEntity
 {

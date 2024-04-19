@@ -1,9 +1,9 @@
 ﻿namespace StudyMate.Domain.Common.Entities;
 
 /// <summary>
-/// Interface that marks an entity as being auditable for deletion tracking.
+/// Defines an entity that the user deleted can be tracked.
 /// </summary>
-public interface IDelationAuditableEntity
+public interface IDeletionAuditableEntity
 {
     /// <summary>
     /// Gets or sets the ID of the user who deleted the entity.

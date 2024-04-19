@@ -6,7 +6,7 @@
 public interface IEntity
 {
     /// <summary>
-    /// Gets or sets the unique identifier of the entity. This identifier should be globally unique within the system.
+    /// Gets or sets the entity Id.
     /// </summary>
     public Guid Id { get; set; }
 }

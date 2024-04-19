@@ -1,7 +1,7 @@
 ﻿namespace StudyMate.Domain.Common.Entities;
 
 /// <summary>
-/// Interface that marks an entity as being auditable for creation tracking.
+/// Defines an entity that the user created can be tracked.
 /// </summary>
 public interface ICreationAuditableEntity
 {

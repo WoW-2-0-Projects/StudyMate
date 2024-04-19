@@ -1,7 +1,7 @@
 ﻿namespace StudyMate.Domain.Common.Entities;
 
 /// <summary>
-/// Represents an entity that supports soft deletion, inheriting properties from IEntity.
+/// Defines an entity that can be soft deleted.
 /// </summary>
 public interface ISoftDeletedEntity : IEntity
 {
@@ -11,8 +11,7 @@ public interface ISoftDeletedEntity : IEntity
     public bool IsDeleted { get; set; }
 
     /// <summary>
-    /// Gets or sets the date and time when the entity was soft deleted. This value will be <c>null</c> if the entity
-    /// has not been soft deleted.
+    /// Gets or sets the date and time when the entity was soft deleted.
     /// </summary>
     public DateTimeOffset? DeletedTime { get; set; }
 }

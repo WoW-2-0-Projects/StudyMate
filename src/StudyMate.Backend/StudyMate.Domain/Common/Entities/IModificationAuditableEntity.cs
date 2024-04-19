@@ -1,14 +1,12 @@
 ﻿namespace StudyMate.Domain.Common.Entities;
 
 /// <summary>
-/// Defines an entity that tracks its modification history by storing the identifier of the user who last modified it.
-/// Entities implementing this interface enable auditing and traceability of changes within the system.
+/// Defines an entity that the user modified can be tracked.
 /// </summary>
 public interface IModificationAuditableEntity
 {
     /// <summary>
-    /// Gets or sets the identifier of the user who last modified the entity.
-    /// This value is typically set automatically by the system when the entity is updated.
+    /// Gets or sets the ID of the user who last modified the entity.
     /// </summary>
     public Guid ModifiedByUserId { get; set; }
 }
