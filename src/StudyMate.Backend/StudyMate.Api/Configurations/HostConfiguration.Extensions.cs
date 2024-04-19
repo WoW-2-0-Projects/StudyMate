@@ -11,26 +11,38 @@ public static partial class HostConfiguration
         builder.Services.Configure<CoreSettings>(builder.Configuration.GetSection(nameof(CoreSettings)));
         var corsSettings = builder.Configuration.GetSection(nameof(CoreSettings)).Get<CoreSettings>()
                            ?? throw new HostAbortedException("Cors settings are not configured");
-        
+
+        // Register development CORS policy
+        builder.Services.AddCors(options => options.AddPolicy(HostConstants.AllowAnyOrigins,
+            policy =>
+            {
+                policy
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            }
+        ));
+
+        // Register production CORS policy
         builder.Services.AddCors(options => options.AddPolicy(HostConstants.AllowSpecificOrigins,
             policy =>
             {
                 policy.WithOrigins(corsSettings.AllowedOrigins);
-                    
-                if(corsSettings.AllowAnyHeaders)
+
+                if (corsSettings.AllowAnyHeaders)
                     policy.AllowAnyHeader();
-                
-                if(corsSettings.AllowAnyMethods)
+
+                if (corsSettings.AllowAnyMethods)
                     policy.AllowAnyMethod();
-                
-                if(corsSettings.AllowCredentials)
+
+                if (corsSettings.AllowCredentials)
                     policy.AllowCredentials();
             }
         ));
 
         return builder;
     }
-    
+
     /// <summary>
     /// Registers developer tools
     /// </summary>
@@ -40,7 +52,7 @@ public static partial class HostConfiguration
 
         return builder;
     }
-    
+
     /// <summary>
     /// Registers API exposers
     /// </summary>
@@ -51,17 +63,20 @@ public static partial class HostConfiguration
 
         return builder;
     }
-    
+
     /// <summary>
     /// Configures CORS settings
     /// </summary>
     private static WebApplication UseCors(this WebApplication app)
     {
-        app.UseCors(HostConstants.AllowSpecificOrigins);
-        
+        if (app.Environment.IsDevelopment())
+            app.UseCors(HostConstants.AllowAnyOrigins);
+        else
+            app.UseCors(HostConstants.AllowSpecificOrigins);
+
         return app;
     }
-    
+
     /// <summary>
     /// Registers developer tools middlewares
     /// </summary>

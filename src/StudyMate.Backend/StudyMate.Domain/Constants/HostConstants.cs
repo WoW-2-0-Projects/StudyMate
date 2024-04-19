@@ -5,8 +5,6 @@
 /// </summary>
 public static class HostConstants
 {
-    /// <summary>
-    /// CORS settings name constant
-    /// </summary>
     public const string AllowSpecificOrigins = "AllowSpecificOrigins";
+    public const string AllowAnyOrigins = "AllowAnyOrigins";
 }
