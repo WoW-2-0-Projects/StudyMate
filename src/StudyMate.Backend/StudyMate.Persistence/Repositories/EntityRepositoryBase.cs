@@ -9,7 +9,7 @@ using StudyMate.Persistence.Extensions;
 namespace StudyMate.Persistence.Repositories;
 
 /// <summary>
-/// Represents a base repository for entities with common CRUD operations.
+/// Provide a base repository for entities with common CRUD operations.
 /// </summary>
 /// <param name="dbContext"></param>
 public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext) where TEntity : class, IEntity where TContext : DbContext
