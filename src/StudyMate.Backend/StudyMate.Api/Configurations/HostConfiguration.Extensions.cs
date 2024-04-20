@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StudyMate.Application.Common.Serializers.Brokers;
 using StudyMate.Domain.Constants;
+using StudyMate.Infrastructure.Common.Caching;
+using StudyMate.Infrastructure.Common.Serializers.Brokers;
 using StudyMate.Infrastructure.Common.Settings;
+using StudyMate.Persistence.Caching.Brokers;
 using StudyMate.Persistence.DataContexts;
 
 namespace StudyMate.Api.Configurations;
@@ -20,7 +24,7 @@ public static partial class HostConfiguration
 
         return builder;
     }
-    
+
     private static WebApplicationBuilder AddCors(this WebApplicationBuilder builder)
     {
         // Register settings
@@ -92,7 +96,7 @@ public static partial class HostConfiguration
 
         return app;
     }
-    
+
     /// <summary>
     /// Migrates database schemas
     /// </summary>
@@ -104,6 +108,32 @@ public static partial class HostConfiguration
 
         return app;
     }
+
+    ///<summary>
+    /// Configures and adds Serializers to web application.
+    /// </summary>
+    private static WebApplicationBuilder AddSerializers(this WebApplicationBuilder builder)
+    {
+        // Register json serialization settings
+        builder.Services.AddSingleton<IJsonSerializationSettingsProvider, JsonSerializationSettingsProvider>();
+
+        return builder;
+    }
+    
+    /// <summary>
+    /// Registers caching
+    /// </summary>
+    private static WebApplicationBuilder AddCaching(this WebApplicationBuilder builder)
+    {
+        // Register settings
+        builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
+
+        // Register cache brokers
+        builder.Services.AddLazyCache().AddSingleton<ICacheBroker, LazyMemoryCacheBroker>();
+
+        return builder;
+    }
+    
 
     /// <summary>
     /// Registers developer tools middlewares
