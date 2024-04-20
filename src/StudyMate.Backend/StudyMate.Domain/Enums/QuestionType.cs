@@ -18,5 +18,5 @@ public enum QuestionType
     /// <summary>
     /// Represents a binary question
     /// </summary>
-    BinaryQuestion
+    TrueFalseQuestion
 }

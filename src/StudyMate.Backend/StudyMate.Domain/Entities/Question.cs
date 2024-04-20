@@ -1,4 +1,5 @@
-﻿using StudyMate.Domain.Common.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using StudyMate.Domain.Common.Entities;
 using StudyMate.Domain.Enums;
 
 namespace StudyMate.Domain.Entities;
@@ -6,7 +7,7 @@ namespace StudyMate.Domain.Entities;
 /// <summary>
 /// Represents question in the system
 /// </summary>
-public class Question : IEntity
+public abstract class Question : IEntity
 {
     /// <summary>
     /// Gets or sets the question identifier
@@ -14,17 +15,21 @@ public class Question : IEntity
     public Guid Id { get; set; }
     
     /// <summary>
-    /// Gets or sets the answer identifier
-    /// </summary>
-    public Guid AnswerId { get; set; }
-    
-    /// <summary>
     /// Gets or sets the question type
     /// </summary>
-    public QuestionType Type { get; set; }
+    public string TypeValue { get; set; }
     
+    [NotMapped]
+    public QuestionType Type
+    {
+        get => Enum.Parse<QuestionType>(TypeValue);
+        set => TypeValue = value.ToString();
+    }
+
     /// <summary>
     /// Gets or sets the question content
     /// </summary>
-    public string? QuestionContent { get; set; }
+    public string QuestionContent { get; set; } = default!;
+
+    public Answer Answer { get; set; } = default!;
 }

@@ -18,4 +18,8 @@
       <ProjectReference Include="..\StudyMate.Domain\StudyMate.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Repositories\Interfaces\" />
+    </ItemGroup>
+
 </Project>
