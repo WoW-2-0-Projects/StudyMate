@@ -8,6 +8,7 @@ public static partial class HostConfiguration
     public static ValueTask<WebApplicationBuilder> ConfigureAsync(this WebApplicationBuilder builder)
     {
         builder
+            .AddPersistence()
             .AddCors()
             .AddDevTools()
             .AddExposers();
@@ -18,13 +19,15 @@ public static partial class HostConfiguration
     /// <summary>
     /// Configures application
     /// </summary>
-    public static ValueTask<WebApplication> ConfigureAsync(this WebApplication app)
+    public static async ValueTask<WebApplication> ConfigureAsync(this WebApplication app)
     {
+        await app.MigrateDataBaseSchemasAsync();
+        
         app
             .UseCors()
             .UseDevTools()
             .UseExposers();
-        
-        return new ValueTask<WebApplication>(app);
+
+        return app;
     }
 }

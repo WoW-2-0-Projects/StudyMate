@@ -1,10 +1,26 @@
-﻿using StudyMate.Domain.Constants;
+﻿using Microsoft.EntityFrameworkCore;
+using StudyMate.Domain.Constants;
 using StudyMate.Infrastructure.Common.Settings;
+using StudyMate.Persistence.DataContexts;
 
 namespace StudyMate.Api.Configurations;
 
 public static partial class HostConfiguration
 {
+    /// <summary>
+    /// Registers persistence infrastructure
+    /// </summary>
+    private static WebApplicationBuilder AddPersistence(this WebApplicationBuilder builder)
+    {
+        // Register data context
+        builder.Services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseNpgsql(builder.Configuration.GetConnectionString(DataAccessConstants.DbConnectionString));
+        });
+
+        return builder;
+    }
+    
     private static WebApplicationBuilder AddCors(this WebApplicationBuilder builder)
     {
         // Register settings
@@ -73,6 +89,18 @@ public static partial class HostConfiguration
             app.UseCors(HostConstants.AllowAnyOrigins);
         else
             app.UseCors(HostConstants.AllowSpecificOrigins);
+
+        return app;
+    }
+    
+    /// <summary>
+    /// Migrates database schemas
+    /// </summary>
+    private static async ValueTask<WebApplication> MigrateDataBaseSchemasAsync(this WebApplication app)
+    {
+        var serviceScopeFactory = app.Services.GetRequiredKeyedService<IServiceScopeFactory>(null);
+
+        await serviceScopeFactory.MigrateAsync<AppDbContext>();
 
         return app;
     }
