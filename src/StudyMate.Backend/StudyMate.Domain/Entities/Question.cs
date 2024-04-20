@@ -6,18 +6,13 @@ namespace StudyMate.Domain.Entities;
 /// <summary>
 /// Represents question in the system
 /// </summary>
-public class Question : IEntity
+public abstract class Question : IEntity
 {
     /// <summary>
     /// Gets or sets the question identifier
     /// </summary>
     public Guid Id { get; set; }
-    
-    /// <summary>
-    /// Gets or sets the answer identifier
-    /// </summary>
-    public Guid AnswerId { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the question type
     /// </summary>
@@ -26,5 +21,5 @@ public class Question : IEntity
     /// <summary>
     /// Gets or sets the question content
     /// </summary>
-    public string? QuestionContent { get; set; }
+    public string? QuestionContent { get; set; } 
 }
