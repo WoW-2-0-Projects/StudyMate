@@ -12,7 +12,8 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
         builder.Property(question => question.QuestionContent).HasMaxLength(4096).IsRequired();
 
         builder
-            .HasDiscriminator(question => question.TypeValue)
-            .HasValue<MultipleChoiceQuestion>(QuestionType.MultipleChoice.ToString());
+            .HasDiscriminator(question => question.Type)
+            .HasValue<MultipleChoiceQuestion>(QuestionType.MultipleChoice)
+            .HasValue<TrueFalseQuestion>(QuestionType.TrueFalseQuestion);
     }
 }

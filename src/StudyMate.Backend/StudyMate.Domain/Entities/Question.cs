@@ -17,14 +17,7 @@ public abstract class Question : IEntity
     /// <summary>
     /// Gets or sets the question type
     /// </summary>
-    public string TypeValue { get; set; }
-    
-    [NotMapped]
-    public QuestionType Type
-    {
-        get => Enum.Parse<QuestionType>(TypeValue);
-        set => TypeValue = value.ToString();
-    }
+    public QuestionType Type { get; set; }
 
     /// <summary>
     /// Gets or sets the question content

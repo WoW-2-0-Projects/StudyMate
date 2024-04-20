@@ -13,8 +13,8 @@ using StudyMate.Persistence.DataContexts;
 namespace StudyMate.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240420121609_test")]
-    partial class test
+    [Migration("20240420123434_tset")]
+    partial class tset
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,16 +59,14 @@ namespace StudyMate.Persistence.Migrations
                         .HasMaxLength(4096)
                         .HasColumnType("character varying(4096)");
 
-                    b.Property<string>("TypeValue")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("character varying(21)");
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.ToTable("Questions");
 
-                    b.HasDiscriminator<string>("TypeValue").HasValue("Question");
+                    b.HasDiscriminator<int>("Type");
 
                     b.UseTphMappingStrategy();
                 });
@@ -98,14 +96,14 @@ namespace StudyMate.Persistence.Migrations
                 {
                     b.HasBaseType("StudyMate.Domain.Entities.Question");
 
-                    b.HasDiscriminator().HasValue("MultipleChoice");
+                    b.HasDiscriminator().HasValue(0);
                 });
 
             modelBuilder.Entity("StudyMate.Domain.Entities.TrueFalseQuestion", b =>
                 {
                     b.HasBaseType("StudyMate.Domain.Entities.Question");
 
-                    b.HasDiscriminator().HasValue("TrueFalseQuestion");
+                    b.HasDiscriminator().HasValue(2);
                 });
 
             modelBuilder.Entity("StudyMate.Domain.Entities.Answer", b =>

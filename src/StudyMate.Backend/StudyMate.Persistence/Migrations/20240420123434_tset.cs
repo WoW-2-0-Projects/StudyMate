@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StudyMate.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class test : Migration
+    public partial class tset : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace StudyMate.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TypeValue = table.Column<string>(type: "character varying(21)", maxLength: 21, nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
                     QuestionContent = table.Column<string>(type: "character varying(4096)", maxLength: 4096, nullable: false)
                 },
                 constraints: table =>
