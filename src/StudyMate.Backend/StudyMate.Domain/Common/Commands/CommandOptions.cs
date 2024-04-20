@@ -1,12 +1,12 @@
-﻿namespace StudyMate.Domain.Common.Commands;
+namespace StudyMate.Domain.Common.Commands;
 
 /// <summary>
-/// Represents options related to the execution of a command, particularly controlling data persistence.
+/// Represents a options to configure command execution and persistence behavior
 /// </summary>
 public struct CommandOptions()
 {
     /// <summary>
-    /// Gets or sets a value indication whether changes made by the command should be automatically saved to the underlying data store.
+    /// Gets or sets persistence step behavior of command execution
     /// </summary>
-    public bool SkipSaveChanges { get; set; } = false;
+    public bool SkipSavingChanges { get; set; } = false;
 }
