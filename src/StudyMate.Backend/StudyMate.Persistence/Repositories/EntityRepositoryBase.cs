@@ -17,11 +17,11 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
     protected TContext DbContext => dbContext;
 
     /// <summary>
-    /// Retrieves entities from the repository based on optional filtering conditions
+    /// Gets queryable source of entities based on optional filtering conditions
     /// </summary>
     /// <param name="predicate">Entity filter predicate</param>
     /// <param name="queryOptions">Query options</param>
-    /// <returns>Queryable source entities</returns>
+    /// <returns>Queryable source of entities</returns>
     protected IQueryable<TEntity> Get(Expression<Func<TEntity, bool>>? predicate = default, QueryOptions queryOptions = default)
     {
         var initialQuery = DbContext.Set<TEntity>().Where(entity => true);
@@ -33,7 +33,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
     }
 
     /// <summary>
-    /// Retrieves entities by its Id
+    /// Gets entity by Id
     /// </summary>
     /// <param name="entityId">Entity Id</param>
     /// <param name="queryOptions">Query options</param>
@@ -97,7 +97,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
     /// <param name="entity">Entity to create</param>
     /// <param name="commandOptions">Create command options</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    /// <returns>Created entity</returns>
+    /// <returns>The created entity</returns>
     protected async ValueTask<TEntity> CreateAsync(
         TEntity entity,
         CommandOptions commandOptions = default,
@@ -118,7 +118,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
     /// <param name="entity">Entity to update</param>
     /// <param name="commandOptions">Update command options</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    /// <returns>Updated entity</returns>
+    /// <returns>The updated entity</returns>
     protected async ValueTask<TEntity> UpdateAsync(TEntity entity, CommandOptions commandOptions, CancellationToken cancellationToken = default)
     {
         DbContext.Set<TEntity>().Update(entity);
@@ -156,7 +156,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
     /// <param name="entity">Entity to delete</param>
     /// <param name="commandOptions">Delete command options</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    /// <returns>Updated entity if soft deleted, otherwise null</returns>
+    /// <returns>The deleted entity if soft deleted, otherwise null</returns>
     protected async ValueTask<TEntity?> DeleteAsync(
         TEntity entity,
         CommandOptions commandOptions = default,
@@ -177,7 +177,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
     /// <param name="entityId">Id of entity to delete</param>
     /// <param name="commandOptions">Delete command options</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    /// <returns>Deletion result</returns>
+    /// <returns>The deleted entity if soft deleted, otherwise null</returns>
     protected async ValueTask<TEntity?> DeleteByIdAsync(Guid entityId, CommandOptions commandOptions, CancellationToken cancellationToken = default)
     {
         var entity = await DbContext.Set<TEntity>().FirstOrDefaultAsync(entity => entity.Id == entityId, cancellationToken) ??
