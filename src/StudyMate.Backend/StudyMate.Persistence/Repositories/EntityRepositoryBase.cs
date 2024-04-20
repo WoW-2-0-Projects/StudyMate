@@ -29,7 +29,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
         if (predicate is not null)
             initialQuery = initialQuery.Where(predicate);
 
-        return initialQuery.ApplyTrackingMode(queryOptions.TrackingMode);
+        return initialQuery.ApplyTrackingMode(queryOptions.QueryTrackingMode);
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
 
         var initialQuery = DbContext.Set<TEntity>().AsQueryable();
 
-        initialQuery.ApplyTrackingMode(queryOptions.TrackingMode);
+        initialQuery.ApplyTrackingMode(queryOptions.QueryTrackingMode);
 
         foundEntity = await initialQuery.FirstOrDefaultAsync(entity => entity.Id == entityId, cancellationToken);
 
@@ -106,7 +106,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
     {
         await DbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
 
-        if (!commandOptions.SkipSavingChanges)
+        if (!commandOptions.SkipSaveChanges)
             await DbContext.SaveChangesAsync(cancellationToken);
 
         return entity;
@@ -123,7 +123,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
     {
         DbContext.Set<TEntity>().Update(entity);
 
-        if (!commandOptions.SkipSavingChanges)
+        if (!commandOptions.SkipSaveChanges)
             await DbContext.SaveChangesAsync(cancellationToken);
 
         return entity;
@@ -165,7 +165,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
     {
         DbContext.Set<TEntity>().Remove(entity);
 
-        if (!commandOptions.SkipSavingChanges)
+        if (!commandOptions.SkipSaveChanges)
             await DbContext.SaveChangesAsync(cancellationToken);
 
         return entity;
@@ -185,7 +185,7 @@ public abstract class EntityRepositoryBase<TEntity, TContext>(TContext dbContext
 
         DbContext.Remove(entity);
 
-        if (!commandOptions.SkipSavingChanges)
+        if (!commandOptions.SkipSaveChanges)
             await DbContext.SaveChangesAsync(cancellationToken);
 
         return entity;

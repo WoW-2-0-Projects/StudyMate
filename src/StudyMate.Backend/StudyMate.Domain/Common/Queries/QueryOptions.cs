@@ -1,14 +1,15 @@
 ﻿namespace StudyMate.Domain.Common.Queries;
 
 /// <summary>
-/// Represents a options to configure data querying behavior
+/// Represents a set of options to configure data querying behavior.
 /// </summary>
-public struct QueryOptions()
+public struct QueryOptions
 {
     /// <summary>
-    /// Gets or sets change tracking behavior for query result
+    /// Gets or sets change tracking mode for query results.
+    /// Using AsNoTracking change tracking mode can potentially improve the performance.
     /// </summary>
-    public QueryTrackingMode TrackingMode { get; set; }
+    public QueryTrackingMode QueryTrackingMode { get; set; }
 
-    public QueryOptions(QueryTrackingMode trackingMode) : this() => TrackingMode = trackingMode;
+    public QueryOptions(QueryTrackingMode queryTrackingMode) : this() => QueryTrackingMode = queryTrackingMode;
 }

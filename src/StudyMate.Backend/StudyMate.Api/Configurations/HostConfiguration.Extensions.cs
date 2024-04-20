@@ -1,12 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using StudyMate.Application.Common.Serializers.Brokers;
 using StudyMate.Domain.Constants;
+using StudyMate.Infrastructure.Common.Caching;
+using StudyMate.Infrastructure.Common.Serializers.Brokers;
 using StudyMate.Infrastructure.Common.Settings;
+using StudyMate.Persistence.Caching.Brokers;
 using StudyMate.Persistence.DataContexts;
+using StudyMate.Infrastructure.Common.EventBus.Extensions;
+using System.Reflection;
+using StudyMate.Application.Common.Events.Brokers;
+using StudyMate.Infrastructure.Common.EventBus.Brokers;
 
 namespace StudyMate.Api.Configurations;
 
 public static partial class HostConfiguration
 {
+    private static readonly ICollection<Assembly> Assemblies = Assembly.GetExecutingAssembly()
+        .GetReferencedAssemblies()
+        .Select(Assembly.Load)
+        .Append(Assembly.GetExecutingAssembly())
+        .ToList();
+
     /// <summary>
     /// Registers persistence infrastructure
     /// </summary>
@@ -20,7 +35,63 @@ public static partial class HostConfiguration
 
         return builder;
     }
-    
+
+    /// <summary>
+    /// Extension method for adding event bus services to the application.
+    /// </summary>
+    private static WebApplicationBuilder AddEventBus(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddMassTransit(
+            configuration =>
+            {
+                var serviceProvider = configuration.BuildServiceProvider();
+                var jsonSerializerSettingsProvider =
+                    serviceProvider.GetRequiredService<IJsonSerializationSettingsProvider>();
+
+                configuration.RegisterAllConsumers(Assemblies);
+                configuration.UsingInMemory(
+                    (context, cfg) =>
+                    {
+                        cfg.ConfigureEndpoints(context);
+
+                        // Change default serializer to NewtonsoftJson
+                        cfg.UseNewtonsoftJsonSerializer();
+                        cfg.UseNewtonsoftJsonDeserializer();
+
+                        // Change default serializer settings
+                        cfg.ConfigureNewtonsoftJsonSerializer(settings =>
+                            jsonSerializerSettingsProvider.ConfigureForEventBus(settings));
+                        cfg.ConfigureNewtonsoftJsonDeserializer(settings =>
+                            jsonSerializerSettingsProvider.ConfigureForEventBus(settings));
+                    }
+                );
+            }
+        );
+
+        builder.Services.AddSingleton<IEventBusBroker, MassTransitEventBusBroker>();
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Registers mapping services
+    /// </summary>
+    private static WebApplicationBuilder AddMappers(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAutoMapper(Assemblies);
+        return builder;
+    }
+
+    /// <summary>
+    /// Registers mediatr infrastructure
+    /// </summary>
+    private static WebApplicationBuilder AddMediator(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddMediatR(conf => { conf.RegisterServicesFromAssemblies(Assemblies.ToArray()); });
+
+        return builder;
+    }
+
     private static WebApplicationBuilder AddCors(this WebApplicationBuilder builder)
     {
         // Register settings
@@ -92,7 +163,7 @@ public static partial class HostConfiguration
 
         return app;
     }
-    
+
     /// <summary>
     /// Migrates database schemas
     /// </summary>
@@ -104,6 +175,32 @@ public static partial class HostConfiguration
 
         return app;
     }
+
+    ///<summary>
+    /// Configures and adds Serializers to web application.
+    /// </summary>
+    private static WebApplicationBuilder AddSerializers(this WebApplicationBuilder builder)
+    {
+        // Register json serialization settings
+        builder.Services.AddSingleton<IJsonSerializationSettingsProvider, JsonSerializationSettingsProvider>();
+
+        return builder;
+    }
+    
+    /// <summary>
+    /// Registers caching
+    /// </summary>
+    private static WebApplicationBuilder AddCaching(this WebApplicationBuilder builder)
+    {
+        // Register settings
+        builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
+
+        // Register cache brokers
+        builder.Services.AddLazyCache().AddSingleton<ICacheBroker, LazyMemoryCacheBroker>();
+
+        return builder;
+    }
+    
 
     /// <summary>
     /// Registers developer tools middlewares

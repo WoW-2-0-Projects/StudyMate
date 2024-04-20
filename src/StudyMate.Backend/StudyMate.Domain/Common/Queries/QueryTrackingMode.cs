@@ -1,22 +1,22 @@
-namespace StudyMate.Domain.Common.Queries;
+﻿namespace StudyMate.Domain.Common.Queries;
 
 /// <summary>
-/// Represents query tracking modes for query result tracking
+/// Represents different query tracking modes that can used while querying
 /// </summary>
 public enum QueryTrackingMode
 {
     /// <summary>
-    /// Specifies that query result changes should be tracked
+    /// Spceifies that queries should track changes to entities.
     /// </summary>
     AsTracking,
-    
+
     /// <summary>
-    /// Specifies that query result changes should not be tracked
+    /// Spceifies that queries should not track changes to entities.
     /// </summary>
     AsNoTracking,
-    
+
     /// <summary>
-    /// Specifies that query result changes should not be tracked but identity resolution should be performed
+    /// Spceifies that queries should not track changes to entities, but identity resolution is still performed.
     /// </summary>
     AsNoTrackingWithIdentityResolution
 }
