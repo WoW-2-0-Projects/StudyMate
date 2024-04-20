@@ -9,7 +9,10 @@ public static partial class HostConfiguration
     {
         builder
             .AddSerializers()
+            .AddMappers()
+            .AddValidators()
             .AddMediator()
+            .AddMultipleOptionAnswerInfrastructure()
             .AddPersistence()
             .AddEventBus()
             .AddCaching()
