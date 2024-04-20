@@ -1,4 +1,4 @@
-﻿using StudyMate.Domain.Common.Entities;
+using StudyMate.Domain.Common.Entities;
 using StudyMate.Domain.Enums;
 
 namespace StudyMate.Domain.Entities;

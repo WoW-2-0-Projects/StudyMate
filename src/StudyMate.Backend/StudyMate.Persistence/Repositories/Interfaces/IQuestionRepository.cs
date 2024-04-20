@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using StudyMate.Domain.Common.Commands;
 using StudyMate.Domain.Common.Queries;
 using StudyMate.Domain.Entities;
