@@ -9,18 +9,24 @@ using StudyMate.Persistence.Caching.Brokers;
 using StudyMate.Persistence.DataContexts;
 using StudyMate.Infrastructure.Common.EventBus.Extensions;
 using System.Reflection;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using StudyMate.Application.Common.Events.Brokers;
+using StudyMate.Application.MultipleOptionAnswers.Service;
 using StudyMate.Infrastructure.Common.EventBus.Brokers;
+using StudyMate.Infrastructure.MultipleOptionAnswers.Services;
+using StudyMate.Persistence.Repositories;
+using StudyMate.Persistence.Repositories.Interfaces;
 
 namespace StudyMate.Api.Configurations;
 
 public static partial class HostConfiguration
 {
     private static readonly ICollection<Assembly> Assemblies = Assembly.GetExecutingAssembly()
-        .GetReferencedAssemblies()
-        .Select(Assembly.Load)
-        .Append(Assembly.GetExecutingAssembly())
-        .ToList();
+                                                                       .GetReferencedAssemblies()
+                                                                       .Select(Assembly.Load)
+                                                                       .Append(Assembly.GetExecutingAssembly())
+                                                                       .ToList();
 
     /// <summary>
     /// Registers persistence infrastructure
@@ -33,6 +39,18 @@ public static partial class HostConfiguration
             options.UseNpgsql(builder.Configuration.GetConnectionString(DataAccessConstants.DbConnectionString));
         });
 
+        return builder;
+    }
+
+    private static WebApplicationBuilder AddMultipleOptionAnswerInfrastructure(this WebApplicationBuilder builder)
+    {
+        // Register repositories
+        builder.Services.AddScoped<IMultipleOptionAnswerRepository, MultipleOptionAnswerRepository>();
+
+        // Register services
+        builder.Services.AddScoped<IMultipleOptionAnswerService, MultipleOptionAnswerService>();
+
+        
         return builder;
     }
 
@@ -91,7 +109,13 @@ public static partial class HostConfiguration
 
         return builder;
     }
+    private static WebApplicationBuilder AddValidators(this WebApplicationBuilder builder)
+    {
 
+        builder.Services.AddValidatorsFromAssemblies(Assemblies).AddFluentValidationAutoValidation();
+        
+        return builder;
+    }
     private static WebApplicationBuilder AddCors(this WebApplicationBuilder builder)
     {
         // Register settings
@@ -186,7 +210,7 @@ public static partial class HostConfiguration
 
         return builder;
     }
-    
+
     /// <summary>
     /// Registers caching
     /// </summary>
@@ -200,7 +224,7 @@ public static partial class HostConfiguration
 
         return builder;
     }
-    
+
 
     /// <summary>
     /// Registers developer tools middlewares
